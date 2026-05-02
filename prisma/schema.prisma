@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  EDITOR
+  ADMIN
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String?
+  email     String    @unique
+  password  String?
+  role      Role      @default(USER)
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+}
+
+model CamperModel {
+  id          String    @id @default(cuid())
+  name        String
+  description String
+  seats       Int
+  price       Float
+  imageUrl    String?
+  comments    Comment[]
+  createdAt   DateTime  @default(now())
+}
+
+model Comment {
+  id        String      @id @default(cuid())
+  content   String
+  user      User        @relation(fields: [userId], references: [id])
+  userId    String
+  model     CamperModel @relation(fields: [modelId], references: [id])
+  modelId   String
+  createdAt DateTime    @default(now())
+}
+
+model ContactRequest {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}
