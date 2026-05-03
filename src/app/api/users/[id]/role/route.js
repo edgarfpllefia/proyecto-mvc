@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
+export const runtime = "nodejs";
+
 export async function PUT(request, { params }) {
   const session = await auth();
 
@@ -17,7 +19,6 @@ export async function PUT(request, { params }) {
       return NextResponse.json({ error: "Rol no válido" }, { status: 400 });
     }
 
-    // No permitir cambiar el propio rol
     if (id === session.user.id) {
       return NextResponse.json({ error: "No puedes cambiar tu propio rol" }, { status: 400 });
     }

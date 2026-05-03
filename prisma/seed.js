@@ -1,15 +1,27 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+// Leer el .env manualmente
+const envPath = resolve(process.cwd(), ".env");
+const envContent = readFileSync(envPath, "utf-8");
+const dbUrl = envContent
+  .split("\n")
+  .find((line) => line.startsWith("DATABASE_URL="))
+  ?.replace("DATABASE_URL=", "")
+  .replace(/^"/, "")
+  .replace(/"$/, "")
+  .trim();
+
+console.log("DATABASE_URL encontrada:", dbUrl ? "sí" : "no");
+
+const pool = new Pool({ connectionString: dbUrl });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  // Limpiar datos existentes
   await prisma.camperModel.deleteMany();
 
   await prisma.camperModel.createMany({

@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
+export const runtime = "nodejs";
+
 export async function GET() {
   const models = await prisma.camperModel.findMany({ orderBy: { createdAt: "desc" } });
   return NextResponse.json(models);

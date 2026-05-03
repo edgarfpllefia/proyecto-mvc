@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
+export const runtime = "nodejs";
+
 export async function PUT(request, { params }) {
   const session = await auth();
   if (!session || !["EDITOR", "ADMIN"].includes(session.user.role)) {
@@ -31,8 +33,6 @@ export async function DELETE(request, { params }) {
 
   try {
     const { id } = await params;
-
-    // Primero eliminar comentarios asociados
     await prisma.comment.deleteMany({ where: { modelId: id } });
     await prisma.camperModel.delete({ where: { id } });
 
