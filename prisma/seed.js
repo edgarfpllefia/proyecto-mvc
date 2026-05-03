@@ -9,34 +9,33 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
+  // Limpiar datos existentes
+  await prisma.camperModel.deleteMany();
+
   await prisma.camperModel.createMany({
     data: [
       {
         name: "Adventure Van XL",
-        description:
-          "Camper espaciosa ideal para familias, con cocina completa y zona de descanso amplia.",
+        description: "Camper espaciosa ideal para familias, con cocina completa y zona de descanso amplia. Perfecta para viajes largos.",
         seats: 4,
         price: 89,
-        imageUrl: null,
+        imageUrl: "/images/photo-1634109725557-d2b8ac9f6c5c.avif",
       },
       {
         name: "Compact Cruiser",
-        description:
-          "Perfecta para parejas, compacta y fácil de aparcar en cualquier sitio.",
+        description: "Perfecta para parejas, compacta y fácil de aparcar en cualquier sitio. Todo lo esencial en poco espacio.",
         seats: 2,
         price: 65,
-        imageUrl: null,
+        imageUrl: "/images/anders-nielsen-HwOCUSDIaaU-unsplash.jpg",
       },
       {
         name: "Explorer Pro",
-        description:
-          "Para los aventureros, equipada con todo para rutas de montaña y offroad.",
+        description: "Para los aventureros, equipada con todo para rutas de montaña y offroad. Resistente y versátil.",
         seats: 4,
         price: 110,
-        imageUrl: null,
+        imageUrl: "/images/photo-1576793048000-494aaa93d160.avif",
       },
     ],
-    skipDuplicates: true,
   });
 
   console.log("Seed completado");
