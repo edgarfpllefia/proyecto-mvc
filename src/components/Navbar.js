@@ -18,7 +18,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", check);
   }, [pathname]);
 
-  // Transparente solo en home, sin sesión, arriba del todo
+  // Transparente solo en home, sin sesión confirmada, arriba del todo
   const isTransparent = isHome && !scrolled && status !== 'authenticated';
 
   return (
@@ -31,7 +31,7 @@ export default function Navbar() {
       backgroundColor: isTransparent ? 'transparent' : 'rgba(255,255,255,0.97)',
       backdropFilter: isTransparent ? 'none' : 'blur(12px)',
       borderBottom: isTransparent ? '1px solid transparent' : '1px solid var(--gray-mid)',
-      transition: 'all 0.3s ease',
+      transition: 'all 0.4s ease',
     }}>
       <div style={{
         maxWidth: '1280px',
@@ -50,7 +50,7 @@ export default function Navbar() {
             fontWeight: 700,
             color: isTransparent ? 'white' : 'var(--black)',
             letterSpacing: '-0.02em',
-            transition: 'color 0.3s',
+            transition: 'color 0.4s',
           }}>
             CamperVan<span style={{ color: 'var(--accent)' }}>.</span>
           </span>
@@ -61,7 +61,7 @@ export default function Navbar() {
             textTransform: 'uppercase',
             color: isTransparent ? 'rgba(255,255,255,0.55)' : 'var(--gray-text)',
             marginTop: '2px',
-            transition: 'color 0.3s',
+            transition: 'color 0.4s',
           }}>
             Alquiler & Aventura
           </span>
@@ -81,7 +81,7 @@ export default function Navbar() {
               color: isTransparent ? 'white' : 'var(--black)',
               textDecoration: 'none',
               padding: '0.5rem 1.1rem',
-              transition: 'color 0.3s',
+              transition: 'color 0.4s',
               letterSpacing: '0.01em',
             }}>
               {label}
@@ -96,55 +96,61 @@ export default function Navbar() {
               color: isTransparent ? 'white' : 'var(--black)',
               textDecoration: 'none',
               padding: '0.5rem 1.1rem',
-              transition: 'color 0.3s',
+              transition: 'color 0.4s',
             }}>
               Panel
             </Link>
           )}
         </div>
 
-        {/* Auth */}
-        {session ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <span style={{
-              fontFamily: "'Outfit', sans-serif",
-              fontSize: '0.9rem',
-              color: 'var(--gray-text)',
-            }}>
-              {session.user.name || session.user.email}
-            </span>
-            <button
-              onClick={() => signOut({ callbackUrl: '/' })}
-              style={{
+        {/* Auth — solo renderiza cuando status no es loading */}
+        <div style={{ minWidth: '120px', display: 'flex', justifyContent: 'flex-end' }}>
+          {status === 'loading' ? (
+            <div style={{ width: '80px', height: '36px' }} />
+          ) : session ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span style={{
                 fontFamily: "'Outfit', sans-serif",
-                backgroundColor: 'transparent',
-                border: '1px solid var(--gray-mid)',
-                color: 'var(--black)',
-                padding: '0.6rem 1.25rem',
-                fontSize: '0.85rem',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontWeight: 500,
-              }}
-            >
-              Salir
-            </button>
-          </div>
-        ) : (
-          <Link href="/login" style={{
-            fontFamily: "'Outfit', sans-serif",
-            backgroundColor: 'var(--accent)',
-            color: 'white',
-            padding: '0.65rem 1.5rem',
-            textDecoration: 'none',
-            fontSize: '0.88rem',
-            fontWeight: 500,
-            borderRadius: '6px',
-            letterSpacing: '0.02em',
-          }}>
-            Acceder
-          </Link>
-        )}
+                fontSize: '0.9rem',
+                color: isTransparent ? 'rgba(255,255,255,0.8)' : 'var(--gray-text)',
+                transition: 'color 0.4s',
+              }}>
+                {session.user.name || session.user.email}
+              </span>
+              <button
+                onClick={() => signOut({ callbackUrl: '/' })}
+                style={{
+                  fontFamily: "'Outfit', sans-serif",
+                  backgroundColor: 'transparent',
+                  border: `1px solid ${isTransparent ? 'rgba(255,255,255,0.4)' : 'var(--gray-mid)'}`,
+                  color: isTransparent ? 'white' : 'var(--black)',
+                  padding: '0.6rem 1.25rem',
+                  fontSize: '0.85rem',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontWeight: 500,
+                  transition: 'all 0.4s',
+                }}
+              >
+                Salir
+              </button>
+            </div>
+          ) : (
+            <Link href="/login" style={{
+              fontFamily: "'Outfit', sans-serif",
+              backgroundColor: 'var(--accent)',
+              color: 'white',
+              padding: '0.65rem 1.5rem',
+              textDecoration: 'none',
+              fontSize: '0.88rem',
+              fontWeight: 500,
+              borderRadius: '6px',
+              letterSpacing: '0.02em',
+            }}>
+              Acceder
+            </Link>
+          )}
+        </div>
       </div>
     </nav>
   );
