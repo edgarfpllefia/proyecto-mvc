@@ -3,22 +3,23 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === '/';
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", handleScroll);
-    // Resetear al cambiar de página
-    setScrolled(window.scrollY > 60);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const check = () => setScrolled(window.scrollY > 60);
+    check();
+    window.addEventListener("scroll", check);
+    return () => window.removeEventListener("scroll", check);
   }, [pathname]);
 
-  // En home: transparente hasta scroll. En otras páginas: siempre blanco
-  const isTransparent = isHome && !scrolled;
+  // Transparente solo en home, sin sesión, arriba del todo
+  const isTransparent = isHome && !scrolled && status !== 'authenticated';
 
   return (
     <nav style={{
@@ -42,12 +43,7 @@ export default function Navbar() {
         justifyContent: 'space-between',
       }}>
         {/* Logo */}
-        <Link href="/" style={{
-          textDecoration: 'none',
-          display: 'flex',
-          flexDirection: 'column',
-          lineHeight: 1,
-        }}>
+        <Link href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
           <span style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: '1.4rem',
@@ -91,22 +87,64 @@ export default function Navbar() {
               {label}
             </Link>
           ))}
+
+          {session?.user?.role && session.user.role !== 'USER' && (
+            <Link href="/dashboard" style={{
+              fontFamily: "'Outfit', sans-serif",
+              fontSize: '0.95rem',
+              fontWeight: 400,
+              color: isTransparent ? 'white' : 'var(--black)',
+              textDecoration: 'none',
+              padding: '0.5rem 1.1rem',
+              transition: 'color 0.3s',
+            }}>
+              Panel
+            </Link>
+          )}
         </div>
 
-        {/* CTA */}
-        <Link href="/login" style={{
-          fontFamily: "'Outfit', sans-serif",
-          backgroundColor: 'var(--accent)',
-          color: 'white',
-          padding: '0.65rem 1.5rem',
-          textDecoration: 'none',
-          fontSize: '0.88rem',
-          fontWeight: 500,
-          borderRadius: '6px',
-          letterSpacing: '0.02em',
-        }}>
-          Acceder
-        </Link>
+        {/* Auth */}
+        {session ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <span style={{
+              fontFamily: "'Outfit', sans-serif",
+              fontSize: '0.9rem',
+              color: 'var(--gray-text)',
+            }}>
+              {session.user.name || session.user.email}
+            </span>
+            <button
+              onClick={() => signOut({ callbackUrl: '/' })}
+              style={{
+                fontFamily: "'Outfit', sans-serif",
+                backgroundColor: 'transparent',
+                border: '1px solid var(--gray-mid)',
+                color: 'var(--black)',
+                padding: '0.6rem 1.25rem',
+                fontSize: '0.85rem',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: 500,
+              }}
+            >
+              Salir
+            </button>
+          </div>
+        ) : (
+          <Link href="/login" style={{
+            fontFamily: "'Outfit', sans-serif",
+            backgroundColor: 'var(--accent)',
+            color: 'white',
+            padding: '0.65rem 1.5rem',
+            textDecoration: 'none',
+            fontSize: '0.88rem',
+            fontWeight: 500,
+            borderRadius: '6px',
+            letterSpacing: '0.02em',
+          }}>
+            Acceder
+          </Link>
+        )}
       </div>
     </nav>
   );

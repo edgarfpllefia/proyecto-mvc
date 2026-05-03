@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import CommentSection from "@/components/CommentSection";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +23,7 @@ export default async function ModelDetailPage({ params }) {
   return (
     <div style={{ paddingTop: '72px' }}>
 
-      {/* Header oscuro igual que modelos y contacto */}
+      {/* Header */}
       <div style={{ backgroundColor: 'var(--dark-bg)', padding: '3rem 2rem' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
           <Link href="/models" style={{
@@ -42,11 +43,7 @@ export default async function ModelDetailPage({ params }) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'start' }}>
 
           {/* Imagen */}
-          <div style={{
-            borderRadius: '16px',
-            overflow: 'hidden',
-            boxShadow: '0 8px 30px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06)',
-          }}>
+          <div style={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 8px 30px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06)' }}>
             <img
               src={model.imageUrl || '/images/photo-1634109725557-d2b8ac9f6c5c.avif'}
               alt={model.name}
@@ -80,17 +77,12 @@ export default async function ModelDetailPage({ params }) {
               {model.description}
             </p>
 
-            {/* Specs */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2.5rem' }}>
               {[
                 { label: 'Plazas', value: model.seats },
                 { label: 'Precio/día', value: `${model.price}€` },
               ].map(({ label, value }) => (
-                <div key={label} style={{
-                  backgroundColor: 'var(--gray-light)',
-                  borderRadius: '10px',
-                  padding: '1.25rem 1.5rem',
-                }}>
+                <div key={label} style={{ backgroundColor: 'var(--gray-light)', borderRadius: '10px', padding: '1.25rem 1.5rem' }}>
                   <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '0.4rem', fontWeight: 500 }}>{label}</p>
                   <p style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.6rem', color: 'var(--black)' }}>{value}</p>
                 </div>
@@ -115,92 +107,8 @@ export default async function ModelDetailPage({ params }) {
           </div>
         </div>
 
-        {/* Comentarios */}
-        <div style={{ marginTop: '5rem', paddingTop: '4rem', borderTop: '1px solid var(--gray-mid)' }}>
-          <h2 style={{ fontSize: '1.8rem', color: 'var(--black)', marginBottom: '2rem', letterSpacing: '-0.02em' }}>
-            Comentarios ({model.comments.length})
-          </h2>
-
-          {model.comments.length === 0 ? (
-            <div style={{
-              backgroundColor: 'var(--gray-light)',
-              borderRadius: '12px',
-              padding: '3rem',
-              textAlign: 'center',
-            }}>
-              <p style={{ fontFamily: "'Outfit', sans-serif", color: 'var(--gray-text)', marginBottom: '1.25rem', fontSize: '1rem' }}>
-                Sé el primero en comentar este modelo.
-              </p>
-              <Link href="/login" style={{
-                fontFamily: "'Outfit', sans-serif",
-                display: 'inline-block',
-                backgroundColor: 'var(--accent)',
-                color: 'white',
-                padding: '0.75rem 1.75rem',
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                borderRadius: '6px',
-                fontWeight: 500,
-              }}>
-                Inicia sesión para comentar
-              </Link>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {model.comments.map((comment) => (
-                <div key={comment.id} style={{
-                  backgroundColor: 'white',
-                  border: '1px solid var(--gray-mid)',
-                  borderRadius: '12px',
-                  padding: '1.5rem 2rem',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                    <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 500, fontSize: '1rem', color: 'var(--black)' }}>
-                      {comment.user.name || comment.user.email}
-                    </span>
-                    <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: '0.85rem', color: 'var(--gray-text)' }}>
-                      {new Date(comment.createdAt).toLocaleDateString('es-ES')}
-                    </span>
-                  </div>
-                  <p style={{ fontFamily: "'Outfit', sans-serif", color: 'var(--gray-text)', lineHeight: 1.7, fontSize: '1rem', fontWeight: 300 }}>
-                    {comment.content}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Login prompt */}
-          <div style={{
-            marginTop: '2rem',
-            backgroundColor: 'var(--gray-light)',
-            borderRadius: '12px',
-            padding: '2rem',
-            textAlign: 'center',
-          }}>
-            <p style={{ fontFamily: "'Outfit', sans-serif", color: 'var(--gray-text)', marginBottom: '1rem', fontSize: '1rem' }}>
-              ¿Tienes algo que decir sobre este modelo?
-            </p>
-            <Link href="/login" style={{
-              fontFamily: "'Outfit', sans-serif",
-              display: 'inline-block',
-              backgroundColor: 'var(--dark-bg)',
-              color: 'white',
-              padding: '0.75rem 1.75rem',
-              textDecoration: 'none',
-              fontSize: '0.9rem',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              borderRadius: '6px',
-              fontWeight: 500,
-            }}>
-              Inicia sesión para comentar
-            </Link>
-          </div>
-        </div>
+        {/* Sección de comentarios — componente cliente */}
+        <CommentSection modelId={model.id} comments={model.comments} />
       </div>
     </div>
   );
