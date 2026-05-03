@@ -18,8 +18,11 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", check);
   }, [pathname]);
 
-  // Transparente solo en home, sin sesión confirmada, arriba del todo
+  // Transparente en home cuando: no hay scroll Y (no hay sesión O está cargando)
   const isTransparent = isHome && !scrolled && status !== 'authenticated';
+
+  // Color del texto según fondo
+  const textColor = isTransparent ? 'white' : 'var(--black)';
 
   return (
     <nav style={{
@@ -31,7 +34,7 @@ export default function Navbar() {
       backgroundColor: isTransparent ? 'transparent' : 'rgba(255,255,255,0.97)',
       backdropFilter: isTransparent ? 'none' : 'blur(12px)',
       borderBottom: isTransparent ? '1px solid transparent' : '1px solid var(--gray-mid)',
-      transition: 'all 0.4s ease',
+      transition: 'background-color 0.4s ease, border-color 0.4s ease',
     }}>
       <div style={{
         maxWidth: '1280px',
@@ -48,7 +51,7 @@ export default function Navbar() {
             fontFamily: "'Playfair Display', serif",
             fontSize: '1.4rem',
             fontWeight: 700,
-            color: isTransparent ? 'white' : 'var(--black)',
+            color: textColor,
             letterSpacing: '-0.02em',
             transition: 'color 0.4s',
           }}>
@@ -78,7 +81,7 @@ export default function Navbar() {
               fontFamily: "'Outfit', sans-serif",
               fontSize: '0.95rem',
               fontWeight: 400,
-              color: isTransparent ? 'white' : 'var(--black)',
+              color: textColor,
               textDecoration: 'none',
               padding: '0.5rem 1.1rem',
               transition: 'color 0.4s',
@@ -93,7 +96,7 @@ export default function Navbar() {
               fontFamily: "'Outfit', sans-serif",
               fontSize: '0.95rem',
               fontWeight: 400,
-              color: isTransparent ? 'white' : 'var(--black)',
+              color: textColor,
               textDecoration: 'none',
               padding: '0.5rem 1.1rem',
               transition: 'color 0.4s',
@@ -103,10 +106,11 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Auth — solo renderiza cuando status no es loading */}
+        {/* Auth */}
         <div style={{ minWidth: '120px', display: 'flex', justifyContent: 'flex-end' }}>
           {status === 'loading' ? (
-            <div style={{ width: '80px', height: '36px' }} />
+            // Placeholder invisible para evitar layout shift
+            <div style={{ width: '100px', height: '36px' }} />
           ) : session ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <span style={{
@@ -123,7 +127,7 @@ export default function Navbar() {
                   fontFamily: "'Outfit', sans-serif",
                   backgroundColor: 'transparent',
                   border: `1px solid ${isTransparent ? 'rgba(255,255,255,0.4)' : 'var(--gray-mid)'}`,
-                  color: isTransparent ? 'white' : 'var(--black)',
+                  color: textColor,
                   padding: '0.6rem 1.25rem',
                   fontSize: '0.85rem',
                   borderRadius: '6px',
