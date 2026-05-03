@@ -76,14 +76,7 @@ export default async function HomePage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
           {models.map((model) => (
             <Link key={model.id} href={`/models/${model.id}`} style={{ textDecoration: 'none' }}>
-              <div style={{
-                backgroundColor: 'white',
-                borderRadius: '16px',
-                overflow: 'hidden',
-                boxShadow: '0 8px 30px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06)',
-                border: '1px solid rgba(0,0,0,0.06)',
-                transition: 'transform 0.3s, box-shadow 0.3s',
-              }}>
+              <div style={{ backgroundColor: 'white', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 8px 30px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06)', border: '1px solid rgba(0,0,0,0.06)' }}>
                 <div style={{ aspectRatio: '3/2', overflow: 'hidden', position: 'relative' }}>
                   <img src={model.imageUrl || '/images/photo-1634109725557-d2b8ac9f6c5c.avif'} alt={model.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)' }} />
@@ -122,30 +115,14 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.6rem',
-              backgroundColor: 'rgba(255,255,255,0.03)',
-              borderRadius: '20px',
-              padding: '0.75rem',
-              boxShadow: '0 30px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.07)',
-            }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '20px', padding: '0.75rem', boxShadow: '0 30px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.07)' }}>
               {[
                 { num: '01', title: 'Flota moderna', desc: 'Vehículos del año revisados antes de cada alquiler. Sin sorpresas en ruta.' },
                 { num: '02', title: 'Recogida flexible', desc: 'Recoge y devuelve donde más te convenga, en puntos de toda la península.' },
                 { num: '03', title: 'Seguro a todo riesgo', desc: 'Cobertura completa incluida en cada reserva. Viaja sin preocupaciones.' },
                 { num: '04', title: 'Atención 24h', desc: 'Equipo disponible en todo momento para cualquier imprevisto durante el viaje.' },
               ].map(({ num, title, desc }) => (
-                <div key={num} style={{
-                  backgroundColor: '#1e1e1e',
-                  borderRadius: '12px',
-                  padding: '1.5rem 1.75rem',
-                  display: 'flex',
-                  gap: '1.5rem',
-                  alignItems: 'flex-start',
-                  border: '1px solid rgba(255,255,255,0.05)',
-                }}>
+                <div key={num} style={{ backgroundColor: '#1e1e1e', borderRadius: '12px', padding: '1.5rem 1.75rem', display: 'flex', gap: '1.5rem', alignItems: 'flex-start', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: '1rem', color: 'var(--accent)', minWidth: '2rem', paddingTop: '2px', fontWeight: 600 }}>{num}</span>
                   <div>
                     <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: '1.05rem', color: 'white', fontWeight: 500, marginBottom: '0.35rem' }}>{title}</p>
