@@ -1,36 +1,147 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# CamperVan Co. — Projecte MVC amb CRUD i Auth
 
-## Getting Started
+Landing page corporativa d'una empresa de lloguer de furgonetes camper, construïda amb Next.js 16, PostgreSQL/Prisma i Auth.js.
 
-First, run the development server:
+## Demo
+
+🌐 **URL de producció**: [https://proyecto-mvc-orcin.vercel.app](https://proyecto-mvc-orcin.vercel.app)
+
+## Stack tecnològic
+
+- **Framework**: Next.js 16 (App Router)
+- **Base de dades**: PostgreSQL (local amb Docker, producció amb Neon)
+- **ORM**: Prisma 7
+- **Autenticació**: Auth.js (NextAuth v5)
+- **Estils**: CSS-in-JS (inline styles) + Google Fonts (Playfair Display, Outfit)
+- **Desplegament**: Vercel (app) + Neon (BD)
+
+## Funcionalitats
+
+- Landing pública amb hero, catàleg de models i formulari de contacte
+- Catàleg de furgonetes camper amb detall per model
+- Comentaris per model (només usuaris autenticats)
+- Formulari de contacte amb validació i persistència
+- Registre i inici de sessió amb email i contrasenya
+- Sistema de rols: USER, EDITOR, ADMIN
+- Panell d'administració:
+  - EDITOR: CRUD complet de models
+  - ADMIN: gestió d'usuaris i rols
+
+## Estructura MVC
+
+```
+src/
+├── app/
+│   ├── api/               # Controllers (API routes)
+│   │   ├── auth/
+│   │   ├── comments/
+│   │   ├── contact/
+│   │   ├── models/
+│   │   ├── register/
+│   │   └── users/
+│   ├── dashboard/         # Panell d'administració
+│   │   ├── models/
+│   │   └── users/
+│   ├── login/
+│   ├── models/            # Vistes públiques de models
+│   │   └── [id]/
+│   ├── register/
+│   └── contact/
+├── components/            # Components reutilitzables
+│   ├── AuthProvider.js
+│   ├── CommentSection.js
+│   ├── DeleteModelButton.js
+│   ├── EditModelForm.js
+│   ├── ChangeRoleButton.js
+│   └── Navbar.js
+├── lib/
+│   └── prisma.js          # Client Prisma (singleton)
+└── auth.js                # Configuració Auth.js
+prisma/
+├── schema.prisma          # Model de dades
+├── migrations/            # Migracions
+└── seed.js                # Dades d'exemple
+```
+
+## Execució en local
+
+### Requisits
+
+- Node.js 18+
+- Docker Desktop
+
+### Passos
+
+1. **Clonar el repositori**
+
+```bash
+git clone https://github.com/TU_USUARIO/proyecto-mvc.git
+cd proyecto-mvc
+```
+
+2. **Instal·lar dependències**
+
+```bash
+npm install
+```
+
+3. **Configurar variables d'entorn**
+
+Crea un fitxer `.env` a l'arrel del projecte:
+
+```env
+DATABASE_URL="postgresql://admin:admin123@localhost:5432/campers_db"
+AUTH_SECRET="el-teu-secret-aqui"
+AUTH_URL="http://localhost:3000"
+```
+
+4. **Arrancar la base de dades amb Docker**
+
+```bash
+docker compose up -d
+```
+
+5. **Aplicar migracions i seed**
+
+```bash
+npx prisma migrate dev
+npx prisma db seed
+```
+
+6. **Arrancar el servidor**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+L'aplicació estarà disponible a `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Credencials de prova
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Rol | Email | Contrasenya |
+|-----|-------|-------------|
+| ADMIN | edgar@edgar.com | edgar123 |
+| EDITOR | carlos@carlos.com | carlos123 |
+| USER | albert@albert.com | albert123 |
 
-## Learn More
+## Variables d'entorn (producció)
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Descripció |
+|----------|------------|
+| `DATABASE_URL` | URL de connexió a PostgreSQL (Neon) |
+| `AUTH_SECRET` | Secret per a JWT d'Auth.js |
+| `AUTH_URL` | URL pública de l'aplicació |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Planificació Agile
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Sprint 1 — MVP visual + base de dades
+- Landing pública (home, models, contacte)
+- Esquema de BD amb Prisma (User, CamperModel, Comment, ContactRequest)
+- Migracions i seed amb dades realistes
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Sprint 2 — API + seguretat + release
+- Endpoints REST per a models, comentaris i contacte
+- Autenticació amb Auth.js (registre + login)
+- Sistema de rols (USER, EDITOR, ADMIN)
+- Panell d'administració protegit per rol
+- Desplegament a Vercel + Neon
